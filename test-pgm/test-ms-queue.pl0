@@ -1,0 +1,59 @@
+type
+ object Node = { var value: T; next: Node; };
+
+var
+    abstract queue: FiniteSeq;
+    global qHead: Node;
+    global qTail: Node;
+    head: Node;
+    tail: Node;
+    nextNode: Node;
+    newNode: Node;
+    retVal: T;
+    empty: T;
+    
+procedure T dequeue() =
+  {
+    while true do
+        {
+        head := qHead;
+        tail := qTail;
+        nextNode := head.next;
+        if head != qHead then 
+              continue;
+        if head = tail then
+            {
+            if nextNode = null then
+                return empty;
+            CAS(qTail, tail, nextNode) // Tail lagging
+            }
+        else 
+            {
+            retVal := head.value;
+            if CAS(qHead, head, nextNode) then
+                return retVal
+                }
+        }
+  };
+
+procedure void enqueue(T value) =
+  {
+    newNode := new Node();
+    newNode.value := value;
+    newNode.next := null;
+    while true do
+    {
+        tail := qTail;
+        nextNode := qTail.next;
+        if qTail != tail then 
+            continue;
+        if nextNode = null then
+            {
+            if CAS(qTail.next, nextNode, newNode) then 
+              break
+            }
+        else 
+            CAS(qTail, tail, nextNode) // Tail lagging
+    };
+    CAS(qTail, tail, newNode) // Tail lagging
+  };

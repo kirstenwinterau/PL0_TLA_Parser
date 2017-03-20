@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>COMP4403/COMP7402 - Assignment 1 Compiler</title>
+</head>
+
+<body>
+Last updated: <LASTUPDATED>Thu 20 Mar 2014 17:21:27 EST</LASTUPDATED>.
+
+<p>
+<FORM><INPUT TYPE="button" VALUE="Back" onClick="history.go(-1);return true;"></FORM>
+
+<h1>PL/0 to TLA+ Compiler Java Source Code</h1>
+<p>
+The Java files that make up the compiler are listed below, along with a
+brief description of their purpose. 
+The source code for the compiler is divided into the following packages:
+<ul>
+  <li><b>pl0</b>
+    contains the Java files for the main program for the compiler
+  </li>
+ <li><b>parser</b>
+    contains the Java files to handle scanning and parsing as well
+    as defining the lexical tokens
+  </li>
+  <li><b>tla</b>
+    contains the abstract syntax tree, the static semantic checker and
+    the TLA+ generator
+  </li>
+  <li><b>tree</b>
+    contains the constructs for TLA+ formulas, modules etc. as well as
+    the invariant parser (to extract components of the TLA+ invariants)
+  </li>
+  <li><b>syms</b>
+    contains the symbol table, its entries, and type descriptors
+  </li>
+  <li><b>source</b>
+    contains the Java files for processing the source input and
+    handling error messages
+  </li>
+</ul>
+ 
+ 
+<h2>Package pl0</h2>
+
+<ul>
+  <li><b>PL0_RD.java</b>
+    (class)
+    The main program for the compiler. Calls the parser
+    then the compiler then saves the generated modules.
+  </li>
+</ul>
+
+
+<h2>Package parser</h2>
+
+<ul>
+  <li><b>IdentifierToken.java</b> 
+    (class, extends LexicalToken)
+    Subclass of token for identifier tokens only.
+  </li>
+  <li><b>LexicalToken.java</b> 
+    (class)
+    Defines the lexical token passed between the scanner and parser.
+  </li>
+  <li><b>NumberToken.java</b>
+    (class, extends LexicalToken)
+    Subclass of token for integer number tokens only.
+  </li>
+  <li><b>Parser.java</b>
+    (class)
+    The parser recognises the input program and creates and
+    abstract syntax tree and symbol table.
+    This version uses a recursive descent parser.
+  </li>
+  <li><b>Scanner.java</b>
+    (class)
+    The scanner recognises the input character stream and splits
+    it up into a stream of lexical tokens.
+  </li>
+  <li><b>Token.java</b>
+    (class)
+    Defines the lexical tokens.
+  </li>
+  <li><b>TokenSet.java</b>
+    (class)
+    Defines types and operations on sets of Tokens.
+  </li>
+  <li><b>TokenStream.java</b>
+    (class)
+    Handles access to the stream of tokens from input source from the
+    parser. Contains generic syntax error recovery methods.
+  </li>
+</ul>
+
+
+<h2>Package tla</h2>
+<ul>
+  <li><b>CompositeStatus.java</b>
+    (class)
+    Data structure to represent a status change from a line of code,
+    includes a pre- and post-value of status
+  </li>
+  <li><b>Formula.java</b>
+    (class)
+    Data structure that represents a formula (or definition) in TLA+, 
+    of the form LHS == RHS
+  </li>
+  <li><b>InvariantParser.java</b>
+    (class)
+    Handles a TLA+ invariant, which must take the form (pc=x => (...) /\ pc=y => (...)
+    /\ ...). It extracts the components applicable to each value of the program counter.
+    It can also modify the invariant for the non-executing thread.
+  </li>
+  <li><b>Module.java</b>
+    (class)
+    Used to represent a module in TLA+, including the invariants and transition relation.
+  </li>
+  <li><b>NameType.java</b>
+    (class)
+    Data structure for representing a variable with the only information required for
+    generating TLA+ - its name and its type
+  </li>
+  <li><b>VariableList.java</b>
+    (class)
+    Data structure representing a list of variables (or constants) in a TLA+ module
+  </li>
+</ul>
+
+<h2>Package tree</h2>
+<ul>
+  <li><b>TlaGenerator.java</b>
+    (class, implements TreeTransform, ExpTransform, and StatementTransform)
+    Implements the TLA+ generation for the compiler via a tree traversal.
+  </li>
+  <li><b>ConstExp.java</b>
+    (class)
+    Symbolic constant expressions are evaluated at compile time.
+    This class provides tree nodes to represent constants and evaluate
+    them.
+  </li>
+  <li><b>DeclNode.java</b>
+    (class)
+    This class provides the abstract syntax tree nodes representing
+    declarations lists and procedure declarations.
+  </li>
+  <li><b>ExpNode.java</b>
+    (class)
+    Defines the nodes in the abstract syntax tree for expressions
+    as well as methods for allowing tree traversals using the visitor pattern.
+  </li>
+  <li><b>ExpTransform.java</b>
+    (interface)
+    Visitor interface for expressions returning a transformed expression.
+  </li>
+  <li><b>Operator.java</b>
+    (enumeration)
+    Enumeration for the binary and unary operators for the abstract syntax tree.
+  </li>
+  <li><b>StatementNode.java</b>
+    (class)
+    Defines the nodes in the abstract syntax tree for statements 
+    as well as methods for allowing tree traversals using the visitor pattern.
+    You'll need to modify this to generate the appropriate abstract
+    syntax tree structure.
+  </li>
+  <li><b>StatementTransform.java</b>
+    (interface)
+    Visitor interface for statement transformation (used in code generation).
+  </li>
+  <li><b>StatementVisitor.java</b>
+    (interface)
+    Visitor interface for statements (used by static checker).
+  </li>
+  <li><b>StaticChecker.java</b>
+    (class, implements TreeVisitor, ExpTransform, and StatementVisitor) 
+    Implements the static (type) checking for the compiler via
+    a tree traversal.
+  </li>
+  <li><b>Tree.java</b>
+    (class)
+    Defines the nodes in the abstract syntax tree for the main program
+    and blocks as well as methods for allowing tree traversals using the visitor pattern.
+  </li>
+  <li><b>TreeVisitor.java</b>
+    (interface)
+    Visitor interface for declarations plus main program and procedures.
+  </li>
+</ul>
+
+
+<h2>Package syms</h2>
+<ul>
+  <li><b>Constants.java</b>
+    (class)
+    Defines the consants, such as the values of STATUS and the suffix to
+    add to the variable names for the non-executing thread.
+  </li>
+  <li><b>Predefined.java</b>
+    (class)
+    Handles all the predefined constants, types and operators.
+  </li>
+  <li><b>Scope.java</b>
+    (class)
+    Provides a single scope within the symbol table.
+  </li>
+  <li><b>SymbolTable.java</b>
+    (class)
+    The main symbol table that puts together symbol tables for
+    each Scope (procedure, main program or predefined scope) that
+    contain entries (SymEntry) for each identifier.
+    Handles constant, variable, type, procedure identifiers, 
+    as well as the type structures.
+  </li>
+  <li><b>SymbolTableTest.java</b>
+    (JUnit test class)
+    JUnit test for the symbol table.
+  </li>
+  <li><b>SymEntry.java</b>
+    (class)
+    Defines the symbol table entries for CONST, TYPE, VAR and 
+    PROCEDURE identifiers, and operators.
+ </li>
+  <li><b>Type.java</b> 
+    (class)
+    Defines the symbol table structures that represent types,
+    including basic types like int and boolean, as well as 
+    subrange types.
+  </li>
+  <li><b>TypeTest.java</b>
+    (JUnit test class)
+    JUnit test for types.
+  </li>
+</ul>
+
+<h2>Package source</h2>
+<ul>
+  <li><b>CompileError.java</b>
+    (class)
+    Stores a single error message.
+  </li>
+  <li><b>ErrorHandler.java</b>
+    (class, implements Errors)
+    Handles the saving and reporting of error messages.
+  </li>
+  <li><b>Errors.java</b>
+    (interface)
+    Errors interface defines error methods.
+  </li>
+  <li><b>LinePositions.java</b>
+    (class)
+    Used for finding the source line in the input file when
+    reporting errors. Used for determining program counter value
+    for a line
+  </li>
+  <li><b>Position.java</b>
+    (class, implements Comparable)
+    Methods for keeping track of the current position in the
+    source input file (used for reporting error messages).
+  </li>
+  <li><b>Severity.java</b>
+    (enumeration)
+    Enumeration containing the error message severities.
+  </li>
+  <li><b>Source.java</b>
+    (class)
+    Handles reading the source input, keeping track of the
+    position within the source input and output of error messages
+    and a listing of the input.
+  </li>
+</ul>
+
+<h1>Other files</h1>
+<p>
+Test programs
+<ul>
+  <li><b>test-pgm/</b>
+    A directory containing a set of test PL0 programs, corresponding
+    to the 4 case studies in the thesis. For each '.pl0' program, there
+    is a corresponding '.tla' file containing the TLA+ user input. These
+    pairs of files must have the same names, and only differ by their
+    file extensions.
+  </li>
+</ul>
+
+<p>
+<FORM><INPUT TYPE="button" VALUE="Back" onClick="history.go(-1);return true;"></FORM>
+
+</body>
+</html>

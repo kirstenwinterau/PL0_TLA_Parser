@@ -1,0 +1,27 @@
+var 
+    global x1: X;
+    global x2: X;
+    global c: C;
+    c0: C;
+    abstract xa1: X;
+    abstract xa2: X;
+
+procedure void write(X d1, X d2) = {
+   lock;
+   c := c + 1;
+   x1 := d1;
+   x2 := d2;
+   c := c + 1;
+   unlock
+};
+
+procedure (X, X) read() = {
+    do {
+        do {
+            c0 := c
+        } while c%2 != 0;
+        d1 := x1; 
+        d2 := x2
+    } while c != c0;
+    return(d1, d2)
+};

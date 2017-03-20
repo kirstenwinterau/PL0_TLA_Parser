@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP4403/7402 Compiling and Running PL0 Compiler</title>
+</head>
+
+<p>
+<FORM><INPUT TYPE="button" VALUE="Back" onClick="history.go(-1);return true;"></FORM>
+
+Last updated: <LASTUPDATED>Thu 20 Mar 2014 17:21:27 EST</LASTUPDATED>.
+
+<h3>Compiling the PL0 compiler</h3>
+
+<h4>Using Eclipse</h4>
+
+If you are using Eclipse then it will automatically compile the Java
+source files.
+
+<h3>Running the PL0 compiler under Eclipse</h3>
+
+You'll need to set up a run configuration to run the PL0 compiler
+under Eclipse.
+While in the assignment compiler Eclipse project that you have
+imported. 
+
+<ul>
+ <li>Select Run>Run Configurations...
+ <li>Select Java Application
+ <li>Press the new icon (the box with the "+" in the corner)
+ <li>Give your new configuration a name (like "testRun")
+ <li>The Project field should correspond to the compiler project (eg,
+  "ENGG4801")
+ <li>Under the "Main" tab, press "search" under "Main class"
+ <li>Select PL0_RD from package pl0
+ <li>Select the "Arguments" tab
+ <li>Insert in text box 
+     <ul>
+       -t "${resource_loc}"
+     </ul>
+     These are the arguments to the PL0 compiler, which are described
+     in more detail below. 
+     -t is used to specify this is a test, and that we want to save the output
+     to the 'test-output' sub-directory under the 'test-pgm' folder.
+     In Eclipse ${resource_loc} is replaced by the currently selected file. 
+     The quotes are used to prevent issues with any blanks in the file path.
+     To compile a PL0 program to TLA+, you should first select the PL0 program,
+     e.g., select "test-pgm/test-treiber-stack.pl0" under Eclipse, and then select
+      "Run>Run" to run the run configuration that you previously ran, or "Run>Run
+     Configurations..." to switch to a different configuration, or
+     create a new configuration. Note that this '.pl0' file must have a '.tla' file
+     with the same name in the same directory that contains the TLA+ user input (such
+     as the invariants).
+  </ul>
+</ul>
+
+There is a set of test PL0 programs within the
+subdirectory <i>test-pgm</i>. 
+
+The output of the compiler is shown in the console window. It is also saved in the
+'test-output' directory. You should ideally delete the output in this directory when you
+make changes to the code (especially changes to the names of methods or the line numbers)
+or it may become confusing.
+
+<h3> Exporting the compiler for the TLA+ Toolbox GUI</h3>
+If you make changes to the parser compiler, you will want to export it as a .jar file for
+use in the TLA Toolbox GUI. 
+<li>Select Run>Run Configurations...
+ <li>Select Java Application
+ <li>Press the new icon (the box with the "+" in the corner)
+ <li>Give your new configuration a name (like "exportRun")
+ <li>The Project field should correspond to the compiler project (eg,
+  "ENGG4801")
+ <li>Under the "Main" tab, press "search" under "Main class"
+ <li>Select PL0_RD from package pl0
+ <li>Select the "Arguments" tab
+ <li>Ensure the text box is empty
+ <li>Choose "Apply"
+ <li>Select File> Export...
+ <li>Under "Java" choose "Runnable JAR File""
+ <li>Choose the launch configuration you just created from the drop-down
+ <li>For export destination, choose the following file path from the root directory
+ of your TLA Toolbox code: "org.lamport.tla.toolbox.tool.tlc/moduleGen.jar". It is
+ very important you choose the correct location and file name. 
+ <li>Ensure the first checkbox is selected under 'Library handling'
+ <li>Press finish and accept any warnings generated, ensuring that you allow Eclipse
+ to overwrite the existing file in this location.
+  
+<h3>Compiler options</h3>
+
+If a compilation of a PL0 program is successful, 
+the compiler normally runs the interpreter to execute the generated code.
+However there are a number of compiler parameters that can change its
+behaviour.
+
+
+<ul>
+          PL0 - PL0 Compiler
+      <br>Usage:  java pl0.PL0_RD [-pt] <i>filename.pl0</i>
+      <br>  -p  =  parse only (no generation of TLA+)
+      <br>  -t  =  test mode (save files to 'test-output' directory)
+      <br> <i>filename.pl0</i> is compiled, using the TLA+ input from
+      filename.tla in the same directory
+</ul>
+<p>
+<FORM><INPUT TYPE="button" VALUE="Back" onClick="history.go(-1);return true;"></FORM>
+
+</body>
+</html>

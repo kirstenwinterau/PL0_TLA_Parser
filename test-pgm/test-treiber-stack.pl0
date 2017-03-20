@@ -1,0 +1,37 @@
+type
+ object Node = { var val: T; next: Node; };
+var
+  abstract stack: FiniteSeq;
+  global head: Node;
+  n: Node;
+  ss: Node;
+  ssn: Node;
+  lv: T;
+  empty: T;
+  
+procedure void push(T v) = 
+  begin
+    n := new Node();
+    n.val := v;
+    repeat
+      begin
+        ss := head;
+        n.next := ss
+      end
+    until CAS(head, ss, n);
+    return void
+  end;
+
+procedure T pop() = 
+  begin
+    repeat
+      begin
+        ss := head;
+        if ss = null then
+            return empty;
+        ssn := ss.next;
+        lv := ss.val
+      end
+    until CAS(head, ss, ssn);
+    return lv
+  end;

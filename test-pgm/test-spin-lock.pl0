@@ -1,0 +1,33 @@
+var 
+    global x: X;
+    abstract x0: X;
+
+
+procedure void acquire() = {
+    while true do {
+        lock;
+        if x = 1 then {
+           x := 0;
+           unlock;
+           return void
+        };
+        unlock;
+        while x = 0 do {
+        }
+    }  
+};
+
+procedure void release() = { 
+    x := 1
+};
+    
+procedure X tryAcquire() = {
+    lock;
+    if x=1 then { 
+        x := 0; 
+        unlock;
+        return 1
+    };
+    unlock;
+    return 0
+};
